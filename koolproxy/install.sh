@@ -3,8 +3,7 @@ export KSROOT=/jffs/koolshare
 source $KSROOT/scripts/base.sh
 
 # stop first
-dbus set koolproxy_enable=0
-[ -f $KSROOT/koolproxy/kp_config.sh ] && sh $KSROOT/koolproxy/kp_config.sh stop
+[ "$koolproxy_enable" == "1" ] && sh $KSROOT/koolproxy/kp_config.sh stop
 
 # remove old files
 rm -rf $KSROOT/bin/koolproxy >/dev/null 2>&1
@@ -61,3 +60,5 @@ dbus set softcenter_module_koolproxy_name=koolproxy
 dbus set softcenter_module_koolproxy_version=3.3.4
 dbus set koolproxy_version=3.3.4
 
+
+[ "$koolproxy_enable" == "1" ] && sh $KSROOT/koolproxy/kp_config.sh restart
