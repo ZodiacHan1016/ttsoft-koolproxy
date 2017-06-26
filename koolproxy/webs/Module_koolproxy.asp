@@ -9,7 +9,18 @@ No part of this file may be used without permission.
 <title>KoolProxy</title>
 <content>
 	<script type="text/javascript">
-		var params = ["koolproxy_enable", "koolproxy_host", "koolproxy_mode", "koolproxy_reboot", "koolproxy_reboot_hour", "koolproxy_reboot_inter_hour", "koolproxy_acl_method", "koolproxy_acl_default"];
+		var dbss;
+		$.ajax({
+		  	type: "GET",
+		 	url: "/_api/ss_basic_enable",
+		  	dataType: "json",
+		  	async:false,
+		 	success: function(data){
+		 	 	dbss = data.result[0];
+		  	}
+		});
+		console.log("dbss", dbss)
+		var params = ["koolproxy_enable", "koolproxy_host", "koolproxy_mode", "koolproxy_reboot", "koolproxy_reboot_hour", "koolproxy_reboot_inter_hour", "koolproxy_acl_method", "koolproxy_filter_ss", "koolproxy_acl_default"];
 		var options_type = [];
 		var options_list = [];
 		var _responseLen;
@@ -203,6 +214,7 @@ No part of this file may be used without permission.
 			E('_koolproxy_mode').disabled = !a;
 			E('_koolproxy_reboot').disabled = !a;
 			E('_koolproxy_acl_method').disabled = !a;
+			E('_koolproxy_filter_ss').disabled = !a;
 			E('_download_cert').disabled = !a;
 		
 			elem.display('_koolproxy_reboot_hour', a && f);
@@ -373,6 +385,7 @@ No part of this file may be used without permission.
 		<div class="content">
 			<div id="identification" class="section"></div>
 			<script type="text/javascript">
+
 				$('#identification').forms([
 					{ title: '开启Koolproxy', name:'koolproxy_enable',type:'checkbox',value: "0" == '1' },
 					{ title: 'Koolproxy运行状态', text: '<font id="_koolproxy_status" name=_koolproxy_status color="#1bbf35">正在获取运行状态...</font>' },
@@ -385,6 +398,7 @@ No part of this file may be used without permission.
 						{ name: 'koolproxy_reboot_inter_hour', type: 'select', options: [], value: "", suffix: '<lable id="koolproxy_reboot_inter_hour_suf">更新</lable>', prefix: '<span id="koolproxy_reboot_inter_hour_pre" class="help-block"><lable>每隔</lable></span>' }
 					] },
 					{ title: '访问控制匹配策略', name:'koolproxy_acl_method',type:'select',options:[['1','IP + MAC匹配'],['2','仅IP匹配'],['2','仅MAC匹配']],value: "1" },
+					{ title: '过滤ss流量',  name:'koolproxy_filter_ss',type:'checkbox', value: "0" == '1', suffix: '<lable>开启后，koolproxy可以过滤经过ss的流量。</lable>', hidden: (dbss.ss_basic_enable == '0' || ! dbss.ss_basic_enable) },
 					{ title: '证书下载', suffix: ' <button id="_download_cert" onclick="download_cert();" class="btn btn-danger">证书下载 <i class="icon-download"></i></button>&nbsp;&nbsp;<a class="kp_btn" href="http://koolshare.cn/thread-80430-1-1.html" target="_blank">【https过滤使用教程】<a>' },
 					{ title: 'KoolProxy交流', suffix: ' <button id="_join_QQ" onclick="join_QQ();" class="btn">加入QQ群</button>&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="join_TG();" class="btn">加入电报群</button>' }
 				]);
